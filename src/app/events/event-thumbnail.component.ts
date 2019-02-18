@@ -15,13 +15,6 @@ import { Component, Input } from '@angular/core';
                     {{ event.location.country }}</span
                 >
             </div>
-            <h3>Sessions</h3>
-            <div *ngFor="let s of event.sessions">
-                <hr />
-                <div>Name: {{ s.name }} | Difficulty: {{s.level}}</div>
-                <div>Presenter: {{ s.presenter }}</div>
-                <p>Abstract: {{s.abstract}}</p>
-            </div>
         </div>
     `,
     styles: [
@@ -29,9 +22,11 @@ import { Component, Input } from '@angular/core';
             .pad-left: {
                 margin-left: 1000px;
             }
-            ,
             .well div {
                 color: #bbb;
+            }
+            .thumbnail {
+                min-height: 210px;
             }
         `
     ]
