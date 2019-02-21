@@ -21,6 +21,8 @@ import { appRoutes } from './routes';
 
 import { Error404Component } from './errors/404.component';
 
+import { AuthService } from './user/auth.service';
+
 @NgModule({
     declarations: [
         EventsAppComponent,
@@ -40,7 +42,8 @@ import { Error404Component } from './errors/404.component';
             provide: 'canDeactivateCreateEvent',
             useValue: checkDirtyState
         },
-        EventListResolver
+        EventListResolver,
+        AuthService
     ],
     bootstrap: [EventsAppComponent]
 })
