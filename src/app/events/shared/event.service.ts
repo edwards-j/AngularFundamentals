@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Subject, Observable} from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { IEvent } from './event.model';
+import { EventsAppComponent } from 'src/app/events-app.component';
 
 @Injectable()
 export class EventService {
@@ -324,11 +325,20 @@ export class EventService {
     getEvents(): Observable<IEvent[]> {
         const subject = new Subject<IEvent[]>();
 
-        setTimeout(() => {subject.next(this.events); subject.complete();}, 100)
+        setTimeout(() => {
+            subject.next(this.events);
+            subject.complete();
+        }, 100);
         return subject;
     }
 
     getEvent(id: number): IEvent {
         return this.events.find(e => e.id === id);
+    }
+
+    saveEvent(e) {
+        e.id = 999;
+        e.session = [];
+        this.events.push(e);
     }
 }
