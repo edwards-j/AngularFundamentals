@@ -1,22 +1,11 @@
-import {Injectable} from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import { toASCII } from 'punycode';
 
-declare let toastr: any;
+export let TOASTR_TOKEN = new InjectionToken<Toastr>('toastr');
 
-@Injectable()
-export class ToastrService {
-    success(message: string) {
-        toastr.success(message);
-    }
-
-    info(message: string) {
-        toastr.info(message);
-    }
-
-    warning(message: string) {
-        toastr.warning(message);
-    }
-
-    error(message: string) {
-        toastr.error(message);
-    }
+export interface Toastr {
+    success(mgs: string, title?: string): void;
+    info(mgs: string, title?: string): void;
+    warning(mgs: string, title?: string): void;
+    error(mgs: string, title?: string): void;
 }
