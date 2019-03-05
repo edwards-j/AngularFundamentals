@@ -113,7 +113,7 @@
             />
         </div>
 
-        <div ngModelGroup="location">
+        <div ngModelGroup="location" #locationGroup="ngModelGroup" validateLocation>
             <div class="form-group">
                 <label for="address">Event Location:</label>
                 <input
@@ -194,17 +194,20 @@
                 class="form-control"
                 placeholder="url of image..."
             />
-            <img [src]="newEvent.eventForm.controls.imageUrl.value"
-            *ngIf="newEventForm.controls.imageUrl?.valid"/>
+            <img
+                [src]="newEvent.eventForm.controls.imageUrl.value"
+                *ngIf="newEventForm.controls.imageUrl?.valid"
+            />
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
         <button
-            type="button"
+            type="submit"
+            class="btn btn-primary"
             [disabled]="newEventForm.invalid"
-            class="btn btn-default"
-            (click)="cancel()"
         >
+            Save
+        </button>
+        <button type="button" class="btn btn-default" (click)="cancel()">
             Cancel
         </button>
     </form>
