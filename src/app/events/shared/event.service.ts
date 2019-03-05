@@ -1,7 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { IEvent, ISession } from './event.model';
 import { EventsAppComponent } from 'src/app/events-app.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class EventService {
@@ -322,24 +324,27 @@ export class EventService {
         }
     ];
 
-    getEvents(): Observable<IEvent[]> {
-        const subject = new Subject<IEvent[]>();
+    constructor(private http: HttpClient) {}
 
-        setTimeout(() => {
-            subject.next(this.events);
-            subject.complete();
-        }, 100);
-        return subject;
+    getEvents(): Observable<IEvent[]> {
+        return this.http
+            .get<IEvent[]>('/api/events')
+            .pipe(catchError(this.handleError<IEvent[]>('getEvents', [])));
     }
 
-    getEvent(id: number): IEvent {
-        return this.events.find(e => e.id === id);
+    getEvent(id: number): Observable<IEvent> {
+        return this.http
+            .get<IEvent>(`/api/events/${id}`)
+            .pipe(catchError(this.handleError<IEvent>('getEvent')));
     }
 
     saveEvent(e) {
-        e.id = 999;
-        e.session = [];
-        this.events.push(e);
+        const options = {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        };
+        return this.http
+            .post<IEvent>('/api/events', e, options)
+            .pipe(catchError(this.handleError<IEvent[]>('saveEvent')));
     }
 
     searchSessions(searchTerm: string) {
@@ -347,8 +352,8 @@ export class EventService {
         let results: ISession[] = [];
 
         this.events.forEach(event => {
-            let matchingSessions = event.sessions.filter(
-                session => session.name.toLocaleLowerCase().includes(term)
+            let matchingSessions = event.sessions.filter(session =>
+                session.name.toLocaleLowerCase().includes(term)
             );
             matchingSessions = matchingSessions.map((session: any) => {
                 session.eventId = event.id;
@@ -362,5 +367,12 @@ export class EventService {
             emitter.emit(results);
         }, 100);
         return emitter;
+    }
+
+    private handleError<T>(operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.error(error);
+            return of(result as T);
+        };
     }
 }
